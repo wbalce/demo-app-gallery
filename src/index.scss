@@ -1,0 +1,13 @@
+@import '@meeco/style-kit/main.scss';
+
+.container {
+    max-width: 600px;
+}
+
+.card {
+    overflow: hidden;
+}
+
+.hidden {
+    display: none;
+}
