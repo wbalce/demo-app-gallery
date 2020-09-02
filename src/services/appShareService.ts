@@ -16,7 +16,6 @@ export class AppShareService implements IAppShareService {
     async unshareItem(item: Item, connectionId: string) {
         const itemData = await item.itemData;
         const share = itemData.shares.find(x => x.connection_id === connectionId);
-        debugger;
         return await new ShareService(ENVIRONMENT_CONFIG).deleteSharedItem(STATE.user, share.id);
     }
 }
