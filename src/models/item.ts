@@ -4,7 +4,7 @@ import { IAppItemDataService } from '../services/appItemDataService';
 export class Item {
     #id: string; // Could be Item Id or Share Id
     #itemData: any;
-    #isItemDataUpdated: boolean;
+    #isItemDataDirty: boolean;
     #dataService: IAppItemDataService;
     #shareService: IAppShareService;
 
@@ -20,20 +20,21 @@ export class Item {
 
     get itemData() {
         return (async () => {
-            if (this.#isItemDataUpdated || !this.#itemData) {
+            if (this.#isItemDataDirty || !this.#itemData) {
                 this.#itemData = await this.#dataService.getItem(this);
             }
+            this.#isItemDataDirty = false;
             return this.#itemData;
         })();
     }
 
     async share(connectionId: string) {
         await this.#shareService.shareItem(this, connectionId);
-        this.#isItemDataUpdated = true;
+        this.#isItemDataDirty = true;
     }
 
     async unshare(connectionId: string) {
         await this.#shareService.unshareItem(this, connectionId);
-        this.#isItemDataUpdated = true;
+        this.#isItemDataDirty = true;
     }
 }
