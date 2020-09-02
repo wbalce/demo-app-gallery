@@ -18,6 +18,9 @@ export class AppLogin extends HTMLElement {
         event.preventDefault();
         if (event.target.tagName !== 'BUTTON') return;
 
+        const buttonEl = this.querySelector('button');
+        buttonEl.classList.add('disabled');
+
         try {
             const form = this.firstElementChild as HTMLFormElement;
             const user = await this.getAuthData(form.elements['password'].value, form.elements['secret'].value);
@@ -27,6 +30,8 @@ export class AppLogin extends HTMLElement {
             console.error(e);
             eventBus.fire(Events.LOGIN_FAILED);
         }
+
+        buttonEl.classList.remove('disabled');
     }
 
     loginHandler() {
