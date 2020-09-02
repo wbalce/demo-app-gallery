@@ -6,12 +6,10 @@ export class AppItem extends HTMLElement {
     #item: Item;
 
     async connectedCallback() {
-        try { 
-            this.render();
-            this.firstElementChild.addEventListener('click', this.clickHandler.bind(this));
-        } catch (e) {
-            console.error(e);
-        }
+        this.render();
+        eventBus.register(Events.SHARE_OP_STARTED, this.disableAppItem.bind(this));
+        eventBus.register(Events.SHARE_OP_ENDED, this.enableAppItem.bind(this));
+        this.firstElementChild.addEventListener('click', this.clickHandler.bind(this));
     }
 
     set item(payload) {
@@ -20,6 +18,14 @@ export class AppItem extends HTMLElement {
 
     async clickHandler() {
         eventBus.fire(Events.ITEM_CLICKED, this.#item);
+    }
+
+    enableAppItem() {
+        this.classList.remove('disabled');
+    }
+
+    disableAppItem() {
+        this.classList.add('disabled');
     }
 
     render() {

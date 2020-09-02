@@ -22,8 +22,9 @@ export class AppItemSharedCheckbox extends HTMLElement {
     }
 
     async clickHandler() {
+        eventBus.fire(Events.SHARE_OP_STARTED);
         this.renderDisabled();
-
+    
         if (this.#isItemChosenShared) {
             await this.#chosenItem.unshare(this.#connectionData.connection.id);
             this.#isItemChosenShared = false;
@@ -32,6 +33,7 @@ export class AppItemSharedCheckbox extends HTMLElement {
             this.#isItemChosenShared = true;
         }
 
+        eventBus.fire(Events.SHARE_OP_ENDED);
         this.renderThenAddEventListener();
     }
 
