@@ -14,11 +14,7 @@ export class AppConnections extends HTMLElement {
     async loginHandler(event) {
         const user: AuthData = event.detail;
 
-        try {
-            this.#connections = await new ConnectionService(ENVIRONMENT_CONFIG).listConnections(user);
-        } catch (e) {
-            console.error(e);
-        }
+        this.#connections = await new ConnectionService(ENVIRONMENT_CONFIG).listConnections(user);
 
         this.render();
     }

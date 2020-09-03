@@ -17,15 +17,12 @@ export class AppGallery extends HTMLElement {
     async loginHandler(event) {
         const user: AuthData = event.detail;
 
-        try {
-            const appItemIdCollectionService = new AppItemIdCollectionService(user);
-            const items = await appItemIdCollectionService.getCreatedItems();
-            const sharedItems = await appItemIdCollectionService.getIncomingSharedItems();
-            this.render(items, sharedItems, user);
-            this.classList.remove('hidden');
-        } catch (e) {
-            console.error(e);
-        }
+        const appItemIdCollectionService = new AppItemIdCollectionService(user);
+        const items = await appItemIdCollectionService.getCreatedItems();
+        const sharedItems = await appItemIdCollectionService.getIncomingSharedItems();
+
+        this.render(items, sharedItems, user);
+        this.classList.remove('hidden');
     }
 
     render(items, shares, user) {
