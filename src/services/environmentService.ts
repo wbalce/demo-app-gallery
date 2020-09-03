@@ -1,4 +1,4 @@
-import { AuthData, Environment } from '@meeco/sdk';
+import { Environment } from '@meeco/sdk';
 
 export const ENVIRONMENT_CONFIG = new Environment({ 
     vault: {
@@ -11,10 +11,3 @@ export const ENVIRONMENT_CONFIG = new Environment({
         provider_api_key: '',
     }
 });
-
-export const STATE: {
-    user?: AuthData;
-    templates?: any;
-    items?: any;
-    template?: any;
-} = {};

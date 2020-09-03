@@ -1,5 +1,5 @@
 import { UserService } from '@meeco/sdk';
-import { ENVIRONMENT_CONFIG, STATE } from '../services/environmentService';
+import { ENVIRONMENT_CONFIG } from '../services/environmentService';
 import eventBus from '../services/eventBus';
 import { Events } from '../constants/events';
 
@@ -24,7 +24,6 @@ export class AppLogin extends HTMLElement {
         try {
             const form = this.firstElementChild as HTMLFormElement;
             const user = await this.getAuthData(form.elements['password'].value, form.elements['secret'].value);
-            STATE.user = user;
             eventBus.fire(Events.LOGIN_SUCCESSFUL, user);
         } catch (e) {
             console.error(e);
