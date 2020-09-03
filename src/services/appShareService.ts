@@ -3,8 +3,8 @@ import { Item } from '../models/item';
 import { ENVIRONMENT_CONFIG, STATE } from './environmentService';
 
 export interface IAppShareService {
-    shareItem: (Item, string) => Promise<any>;
-    unshareItem: (Item, string) => Promise<void>;
+    shareItem: (item: Item, connectionId: string) => Promise<any>;
+    unshareItem: (item: Item, connectionId: string) => Promise<void>;
 }
 
 export class AppShareService implements IAppShareService {

@@ -3,7 +3,7 @@ import { ENVIRONMENT_CONFIG, STATE } from './environmentService';
 import { Item } from '../models/item';
 
 export interface IAppItemDataService {
-    getItem: (Item) => Promise<any>;
+    getItem: (itme: Item) => Promise<any>;
 }
 
 export class AppSharedItemDataService implements IAppItemDataService {
