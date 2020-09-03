@@ -1,20 +1,17 @@
-import { ShareService, Environment, AuthData } from '@meeco/sdk';
-import { Item } from '../models/item';
+import { ShareService } from '@meeco/sdk';
+import { IShareable } from '../models/interfaces/shareable';
+import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
 import { ENVIRONMENT_CONFIG, STATE } from './environmentService';
-
-export interface IAppShareService {
-    shareItem: (item: Item, connectionId: string) => Promise<any>;
-    unshareItem: (item: Item, connectionId: string) => Promise<void>;
-}
+import { IAppShareService } from './interfaces/appShareService';
 
 export class AppShareService implements IAppShareService {
 
-    async shareItem(item: Item, connectionId: string) {
-        return await new ShareService(ENVIRONMENT_CONFIG).shareItem(STATE.user, connectionId, item.id);
+    async shareItem(shareable: IShareable, connectionId: string) {
+        return await new ShareService(ENVIRONMENT_CONFIG).shareItem(STATE.user, connectionId, shareable.id);
     }
 
-    async unshareItem(item: Item, connectionId: string) {
-        const itemData = await item.itemData;
+    async unshareItem(shareable: IShareable & IItemDataRetrievable, connectionId: string) {
+        const itemData = await shareable.retrieveItemData();
         const share = itemData.shares.find(x => x.connection_id === connectionId);
         return await new ShareService(ENVIRONMENT_CONFIG).deleteSharedItem(STATE.user, share.id);
     }

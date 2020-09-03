@@ -1,5 +1,5 @@
-import { IAppItemDataService } from '../../src/services/appItemDataService';
-import { IAppShareService } from '../../src/services/appShareService';
+import { IAppItemDataService } from '../../src/services/interfaces/appItemDataService';
+import { IAppShareService } from '../../src/services/interfaces/appShareService';
 import { Item } from '../../src/models/item';
 import { expect } from 'chai';
 import { rejects } from 'assert';

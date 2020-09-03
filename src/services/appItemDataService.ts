@@ -1,19 +1,16 @@
-import { ShareService, ItemService, AuthData, Environment, vaultAPIFactory } from '@meeco/sdk';
+import { ShareService, ItemService } from '@meeco/sdk';
 import { ENVIRONMENT_CONFIG, STATE } from './environmentService';
-import { Item } from '../models/item';
-
-export interface IAppItemDataService {
-    getItem: (itme: Item) => Promise<any>;
-}
+import { IAppItemDataService } from './interfaces/appItemDataService';
+import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
 
 export class AppSharedItemDataService implements IAppItemDataService {
-    async getItem(item: Item) {
-        return await new ShareService(ENVIRONMENT_CONFIG).getSharedItem(STATE.user, item.id);
+    async getItem(itemDataRetrievable: IItemDataRetrievable) {
+        return await new ShareService(ENVIRONMENT_CONFIG).getSharedItem(STATE.user, itemDataRetrievable.id);
     }
 }
 
 export class AppCreatedItemDataService implements IAppItemDataService {
-    async getItem(item: Item) {
-        return await new ItemService(ENVIRONMENT_CONFIG).get(item.id, STATE.user.vault_access_token, STATE.user.data_encryption_key);
+    async getItem(itemDataRetrievable: IItemDataRetrievable) {
+        return await new ItemService(ENVIRONMENT_CONFIG).get(itemDataRetrievable.id, STATE.user.vault_access_token, STATE.user.data_encryption_key);
     }
 }
