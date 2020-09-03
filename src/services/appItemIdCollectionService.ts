@@ -1,5 +1,5 @@
 import { ENVIRONMENT_CONFIG } from './environmentService';
-import { AuthData, ItemService, ShareService } from '@meeco/sdk';
+import { ItemService, ShareService } from '@meeco/sdk';
 import { AppBaseMeecoService } from './appBaseMeecoService';
 
 export class AppItemIdCollectionService extends AppBaseMeecoService {

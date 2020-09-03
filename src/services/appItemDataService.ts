@@ -1,4 +1,4 @@
-import { ShareService, ItemService, AuthData } from '@meeco/sdk';
+import { ShareService, ItemService } from '@meeco/sdk';
 import { ENVIRONMENT_CONFIG } from './environmentService';
 import { IAppItemDataService } from './interfaces/appItemDataService';
 import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
