@@ -1,5 +1,5 @@
 import { Events } from '../constants/events';
-import eventBus from '../services/eventBus';
+import { EVENT_BUS } from '../services/eventBus';
 import { Item } from '../models/item';
 
 enum CheckboxAccessability {
@@ -13,7 +13,7 @@ export class AppItemSharedCheckbox extends HTMLElement {
     #chosenItem: Item;
 
     connectedCallback() {
-        eventBus.register(Events.ITEM_CLICKED, this.itemChosenHandler.bind(this));
+        EVENT_BUS.register(Events.ITEM_CLICKED, this.itemChosenHandler.bind(this));
         this.renderDisabled();
     }
 
@@ -22,7 +22,7 @@ export class AppItemSharedCheckbox extends HTMLElement {
     }
 
     async clickHandler() {
-        eventBus.fire(Events.SHARE_OP_STARTED);
+        EVENT_BUS.fire(Events.SHARE_OP_STARTED);
         this.renderDisabled();
     
         if (this.#isItemChosenShared) {
@@ -33,7 +33,7 @@ export class AppItemSharedCheckbox extends HTMLElement {
             this.#isItemChosenShared = true;
         }
 
-        eventBus.fire(Events.SHARE_OP_ENDED);
+        EVENT_BUS.fire(Events.SHARE_OP_ENDED);
         this.renderThenAddEventListener();
     }
 

@@ -1,4 +1,4 @@
-import eventBus from '../services/eventBus';
+import { EVENT_BUS } from '../services/eventBus';
 import { Events } from '../constants/events';
 import { AuthData, ConnectionService } from '@meeco/sdk';
 import { ENVIRONMENT_CONFIG } from '../services/environmentService';
@@ -8,7 +8,7 @@ export class AppConnections extends HTMLElement {
     #connections: any[] = [];
 
     connectedCallback() {
-        eventBus.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
+        EVENT_BUS.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
     }
 
     async loginHandler(event) {

@@ -1,4 +1,4 @@
-import eventBus from '../services/eventBus';
+import { EVENT_BUS } from '../services/eventBus';
 import { ENVIRONMENT_CONFIG } from '../services/environmentService';
 import { Events } from '../constants/events';
 import { Item } from '../models/item';
@@ -6,7 +6,7 @@ import { Item } from '../models/item';
 export class AppItemModal extends HTMLElement {
     connectedCallback() {
         this.classList.add('hidden');
-        eventBus.register(Events.ITEM_CLICKED, this.openModalHandler.bind(this));
+        EVENT_BUS.register(Events.ITEM_CLICKED, this.openModalHandler.bind(this));
     }
 
     async openModalHandler(event) {

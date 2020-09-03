@@ -1,6 +1,6 @@
 import { Events } from '../constants/events';
 import { AppItem } from './app-item';
-import eventBus from '../services/eventBus';
+import { EVENT_BUS } from '../services/eventBus';
 import { AppCreatedItemDataService, AppSharedItemDataService } from '../services/appItemDataService';
 import { AppShareService } from '../services/appShareService';
 import { Item } from '../models/item';
@@ -11,7 +11,7 @@ export class AppGallery extends HTMLElement {
 
     connectedCallback() {
         this.classList.add('hidden');
-        eventBus.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
+        EVENT_BUS.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
     }
 
     async loginHandler(event) {
@@ -42,6 +42,6 @@ export class AppGallery extends HTMLElement {
     }
 
     disconnectedCallback() {
-        eventBus.remove(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
+        EVENT_BUS.remove(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
     }
 }

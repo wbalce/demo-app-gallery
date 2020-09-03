@@ -1,5 +1,5 @@
 import { Events } from '../constants/events';
-import eventBus from '../services/eventBus';
+import { EVENT_BUS } from '../services/eventBus';
 import { Item } from '../models/item';
 
 export class AppItem extends HTMLElement {
@@ -7,8 +7,8 @@ export class AppItem extends HTMLElement {
 
     connectedCallback() {
         this.render();
-        eventBus.register(Events.SHARE_OP_STARTED, this.disableAppItem.bind(this));
-        eventBus.register(Events.SHARE_OP_ENDED, this.enableAppItem.bind(this));
+        EVENT_BUS.register(Events.SHARE_OP_STARTED, this.disableAppItem.bind(this));
+        EVENT_BUS.register(Events.SHARE_OP_ENDED, this.enableAppItem.bind(this));
         this.firstElementChild.addEventListener('click', this.clickHandler.bind(this));
     }
 
@@ -17,7 +17,7 @@ export class AppItem extends HTMLElement {
     }
 
     async clickHandler() {
-        eventBus.fire(Events.ITEM_CLICKED, this.#item);
+        EVENT_BUS.fire(Events.ITEM_CLICKED, this.#item);
     }
 
     enableAppItem() {
