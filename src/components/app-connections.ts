@@ -7,7 +7,7 @@ import { AppItemSharedCheckbox } from './app-item-shared-checkbox';
 export class AppConnections extends HTMLElement {
     #connections: any[] = [];
 
-    async connectedCallback() {
+    connectedCallback() {
         eventBus.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
     }
 

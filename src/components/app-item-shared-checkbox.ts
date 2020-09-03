@@ -12,7 +12,7 @@ export class AppItemSharedCheckbox extends HTMLElement {
     #isItemChosenShared: boolean;
     #chosenItem: Item;
 
-    async connectedCallback() {
+    connectedCallback() {
         eventBus.register(Events.ITEM_CLICKED, this.itemChosenHandler.bind(this));
         this.renderDisabled();
     }

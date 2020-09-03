@@ -4,7 +4,7 @@ import { Events } from '../constants/events';
 import { Item } from '../models/item';
 
 export class AppItemModal extends HTMLElement {
-    async connectedCallback() {
+    connectedCallback() {
         this.classList.add('hidden');
         eventBus.register(Events.ITEM_CLICKED, this.openModalHandler.bind(this));
     }

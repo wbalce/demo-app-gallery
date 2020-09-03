@@ -9,7 +9,7 @@ import { AuthData } from '@meeco/sdk';
 
 export class AppGallery extends HTMLElement {
 
-    async connectedCallback() {
+    connectedCallback() {
         this.classList.add('hidden');
         eventBus.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
     }

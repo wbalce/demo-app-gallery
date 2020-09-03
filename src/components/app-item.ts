@@ -5,7 +5,7 @@ import { Item } from '../models/item';
 export class AppItem extends HTMLElement {
     #item: Item;
 
-    async connectedCallback() {
+    connectedCallback() {
         this.render();
         eventBus.register(Events.SHARE_OP_STARTED, this.disableAppItem.bind(this));
         eventBus.register(Events.SHARE_OP_ENDED, this.enableAppItem.bind(this));
