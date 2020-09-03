@@ -10,8 +10,8 @@ export class AppLogin extends HTMLElement {
         eventBus.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
     }
 
-    async getAuthData(password: string, secret: string) {
-        return await new UserService(ENVIRONMENT_CONFIG).get(password, secret);
+    getAuthData(password: string, secret: string): Promise<any> {
+        return new UserService(ENVIRONMENT_CONFIG).get(password, secret);
     }
 
     async clickHandler(event) {
