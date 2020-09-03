@@ -4,7 +4,7 @@ import eventBus from '../services/eventBus';
 import { Events } from '../constants/events';
 
 export class AppLogin extends HTMLElement {
-    async connectedCallback() {
+    connectedCallback() {
         this.render();
         this.firstElementChild.addEventListener('click', this.clickHandler.bind(this));
         eventBus.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
