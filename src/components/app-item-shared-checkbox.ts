@@ -1,80 +1,75 @@
 import { Events } from '../constants/events';
+import { AppItemSharedCheckboxData, AppItemSharedCheckboxPresenter } from '../presenters/appItemSharedCheckboxPresenter';
 import { EVENT_BUS } from '../services/eventBus';
-import { Item } from '../models/item';
+import { IView } from './interfaces/view';
 
 enum CheckboxAccessability {
     ENABLED,
     DISABLED
 }
 
-export class AppItemSharedCheckbox extends HTMLElement {
-    #connectionData: any;
-    #isItemChosenShared: boolean;
-    #chosenItem: Item;
+export class AppItemSharedCheckbox extends HTMLElement implements IView<AppItemSharedCheckboxData> {
+    #presenter: AppItemSharedCheckboxPresenter;
+    #connectionId: string;
+    #userId: string;
 
     connectedCallback() {
-        EVENT_BUS.register(Events.ITEM_CLICKED, this.itemChosenHandler.bind(this));
-        this.renderDisabled();
+        this.#presenter = new AppItemSharedCheckboxPresenter(this, this.#connectionId, this.#userId);
+        EVENT_BUS.register(Events.ICON_CLICKED, this.#presenter.itemChosenHandler.bind(this.#presenter));
+        EVENT_BUS.register(Events.SHARE_CLICKED, this.#presenter.shareChosenHandler.bind(this.#presenter));
+        EVENT_BUS.register(Events.SHARE_OP_STARTED, this.disableCheckboxes.bind(this));
+        EVENT_BUS.register(Events.SHARE_OP_ENDED, this.enableCheckboxes.bind(this));
     }
 
-    set connection(payload) {
-        this.#connectionData = payload;       
+    set connectionId(value: string) {
+        this.#connectionId = value;       
     }
 
-    async clickHandler() {
-        EVENT_BUS.fire(Events.SHARE_OP_STARTED);
-        this.renderDisabled();
-    
-        if (this.#isItemChosenShared) {
-            await this.#chosenItem.unshare(this.#connectionData.connection.id);
-            this.#isItemChosenShared = false;
-        } else {
-            await this.#chosenItem.share(this.#connectionData.connection.id);
-            this.#isItemChosenShared = true;
+    set userId(value: string) {
+        this.#userId = value;
+    }
+
+    enableCheckboxes() {
+        this.toggleCheckboxes(CheckboxAccessability.ENABLED);   
+    }
+
+    disableCheckboxes() {
+        this.toggleCheckboxes(CheckboxAccessability.DISABLED);
+    }
+
+    toggleCheckboxes(toggle: CheckboxAccessability) {
+        const checkBoxes = this.querySelectorAll('input');
+        checkBoxes.forEach(x => {
+            x.disabled = CheckboxAccessability.DISABLED === toggle;
+        });
+    }
+
+    render(data: AppItemSharedCheckboxData[]) {
+        // Remove child nodes along with its event listener
+        while (this.firstChild) {
+            this.removeChild(this.firstChild);
         }
 
-        EVENT_BUS.fire(Events.SHARE_OP_ENDED);
-        this.renderThenAddEventListener();
-    }
+        data.forEach(x => {
+            const label = document.createElement('label');
+            label.innerText = x.userId;
+            label.addEventListener('click', this.#presenter.clickHandler.bind(this.#presenter));
 
-    async itemChosenHandler(event) {
-        this.#chosenItem = event.detail as Item;
-        const itemDetails = await this.#chosenItem.itemData;
+            const input = document.createElement('input');
+            input.setAttribute('type', 'checkbox');
+            if (x.isItemChosenShared) {
+                input.setAttribute('checked', 'checked');
+            }
 
-        // Shares don't have shares[] property.
-        if (itemDetails.shares) {
-            this.#isItemChosenShared = !!itemDetails.shares.find(x => x.connection_id === this.#connectionData.connection.id);
-            this.renderThenAddEventListener();
-        } else {
-            this.#isItemChosenShared = false;
-            this.renderDisabled(); 
-        }
-    }
-
-    renderDisabled() {
-        this.firstElementChild?.removeEventListener('click', this.clickHandler.bind(this));
-        this.render(CheckboxAccessability.DISABLED);
-    }
-
-    renderThenAddEventListener() {
-        this.firstElementChild?.removeEventListener('click', this.clickHandler.bind(this));
-        this.render(CheckboxAccessability.ENABLED);
-        this.firstElementChild?.addEventListener('click', this.clickHandler.bind(this));
-    }
-
-    render(checkboxAccessability: CheckboxAccessability) {
-        this.innerHTML = `
-            <label>
-                ${this.#connectionData.connection.user_id}
-                <input type="checkbox" 
-                    ${checkboxAccessability === CheckboxAccessability.DISABLED ? "disabled" : ""} 
-                    ${this.#isItemChosenShared ? "checked" : ""}
-                >
-            </label>
-        `;
+            label.appendChild(input);
+            this.appendChild(label);
+        });
     }
 
     disconnectedCallback() {
-        this.firstElementChild?.removeEventListener('click', this.clickHandler.bind(this));
+        EVENT_BUS.remove(Events.ICON_CLICKED, this.#presenter.itemChosenHandler.bind(this.#presenter));
+        EVENT_BUS.remove(Events.SHARE_CLICKED, this.#presenter.shareChosenHandler.bind(this.#presenter));
+        EVENT_BUS.remove(Events.SHARE_OP_STARTED, this.disableCheckboxes.bind(this));
+        EVENT_BUS.register(Events.SHARE_OP_ENDED, this.enableCheckboxes.bind(this));
     }
 }

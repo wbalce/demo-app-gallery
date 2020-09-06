@@ -1,17 +1,16 @@
 import { EVENT_BUS } from '../services/eventBus';
-import { ENVIRONMENT_CONFIG } from '../services/environmentService';
 import { Events } from '../constants/events';
-import { Item } from '../models/item';
+import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
 
 export class AppItemModal extends HTMLElement {
     connectedCallback() {
         this.classList.add('hidden');
-        EVENT_BUS.register(Events.ITEM_CLICKED, this.openModalHandler.bind(this));
+        EVENT_BUS.register(Events.ICON_CLICKED, this.openModalHandler.bind(this));
     }
 
     async openModalHandler(event) {
-        const item = event.detail as Item;
-        const itemData = await item.itemData;
+        const item = event.detail as IItemDataRetrievable;
+        const itemData = await item.retrieveItemData();
         this.classList.remove('hidden');
         this.render(itemData.item.label, item.id);
     }

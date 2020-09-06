@@ -1,47 +1,30 @@
 import { Events } from '../constants/events';
-import { AppItem } from './app-item';
+import { AppIcon } from './app-icon';
+import { IView } from './interfaces/view';
+import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
+import { AppGalleryPresenter } from '../presenters/appGalleryPresenter';
 import { EVENT_BUS } from '../services/eventBus';
-import { AppCreatedItemDataService, AppSharedItemDataService } from '../services/appItemDataService';
-import { AppShareService } from '../services/appShareService';
-import { Item } from '../models/item';
-import { AppItemIdCollectionService } from '../services/appItemIdCollectionService';
-import { AuthData } from '@meeco/sdk';
 
-export class AppGallery extends HTMLElement {
+export class AppGallery extends HTMLElement implements IView<IItemDataRetrievable> {
+    #presenter: AppGalleryPresenter;
 
     connectedCallback() {
+        this.#presenter = new AppGalleryPresenter(this);
+        EVENT_BUS.register(Events.LOGIN_SUCCESSFUL, this.#presenter.galleryLoginHandler.bind(this.#presenter));
         this.classList.add('hidden');
-        EVENT_BUS.register(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
     }
 
-    async loginHandler(event) {
-        const user: AuthData = event.detail;
+    render(items: IItemDataRetrievable[]) {
+        items.forEach(x => {
+            const itemEl = document.createElement('app-icon') as AppIcon;
+            itemEl.itemDataRetreivable = x;
+            this.appendChild(itemEl);
+        })
 
-        const appItemIdCollectionService = new AppItemIdCollectionService(user);
-        const items = await appItemIdCollectionService.getCreatedItems();
-        const sharedItems = await appItemIdCollectionService.getIncomingSharedItems();
-
-        this.render(items, sharedItems, user);
         this.classList.remove('hidden');
     }
 
-    render(items, shares, user) {
-        items.forEach(x => {
-            const itemEl = document.createElement('app-item') as AppItem;
-            const item = new Item(x.id, new AppShareService(user), new AppCreatedItemDataService(user)); 
-            itemEl.item = item;
-            this.appendChild(itemEl);
-        });
-
-        shares.forEach(x => {
-            const itemEl = document.createElement('app-item') as AppItem;
-            const item = new Item(x.id, new AppShareService(user), new AppSharedItemDataService(user));
-            itemEl.item = item;
-            this.appendChild(itemEl);
-        });
-    }
-
     disconnectedCallback() {
-        EVENT_BUS.remove(Events.LOGIN_SUCCESSFUL, this.loginHandler.bind(this));
+        EVENT_BUS.remove(Events.LOGIN_SUCCESSFUL, this.#presenter.galleryLoginHandler.bind(this.#presenter));
     }
 }
