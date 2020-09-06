@@ -13,8 +13,8 @@ class EventBus {
         this.#privateBus.removeEventListener(event, callback);
     }
 
-    fire(event, detail = {}) {
-        this.#privateBus.dispatchEvent(new CustomEvent(event, { detail }));
+    fire<T>(event, detail?) {
+        this.#privateBus.dispatchEvent(new CustomEvent<T>(event, { detail }));
     }
 }
 
