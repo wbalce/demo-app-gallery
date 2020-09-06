@@ -3,6 +3,7 @@ import { IView } from '../components/interfaces/view';
 import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
 import { Item } from '../models/item';
 import { Share } from '../models/share';
+import { AppAttachmentService } from '../services/appAttachmentService';
 import { AppCreatedItemDataService, AppSharedItemDataService } from '../services/appItemDataService';
 import { AppItemIdCollectionService } from '../services/appItemIdCollectionService';
 import { AppShareService } from '../services/appShareService';
@@ -18,7 +19,7 @@ export class AppGalleryPresenter {
         const result: IItemDataRetrievable[] = [];
     
         itemIds.forEach(id => {
-            result.push(new Item(id, new AppShareService(user), new AppCreatedItemDataService(user))); 
+            result.push(new Item(id, new AppShareService(user), new AppCreatedItemDataService(user), new AppAttachmentService(user))); 
         });
 
         shareIds.forEach(id => {

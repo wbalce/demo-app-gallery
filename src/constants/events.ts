@@ -7,6 +7,8 @@ export const Events = {
     SHARE_CLICKED: 'share:clicked',
     SHARE_OP_STARTED: 'shareOperation:started',
     SHARE_OP_ENDED: 'shareOperation:ended',
+    ATTACHMENT_OP_STARTED: 'attachmentOperation:started',
+    ATTACHMENT_OP_ENDED: 'attachmentOperation:ended',
     CONNECTIONS_RECEIVED: 'connections:received',
     ITEM_DATA_RECEIVED: 'itemData:recieved',
     ITEM_DATA_RETRIEVABLE_IDS_RECEIVED: 'itemDataRetreivableIds:recieved'

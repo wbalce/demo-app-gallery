@@ -1,19 +1,27 @@
 import { IShareable } from './interfaces/shareable';
+import { IFileAttachable } from './interfaces/fileAttachable';
 import { IItemDataRetrievable } from './interfaces/itemDataRetrievable';
-import { IAppShareService } from '../services/interfaces/appShareService';
 import { IAppItemDataService } from '../services/interfaces/appItemDataService';
+import { IAppShareService } from '../services/interfaces/appShareService';
+import { IAppAttachmentService } from '../services/interfaces/appAttachmentService';
 
-export class Item implements IShareable, IItemDataRetrievable {
+export const isItem = (it: IItemDataRetrievable): it is Item => {
+    return ((<Item>it).share) !== undefined;
+}
+
+export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
     readonly id: string;
     #itemData: any;
     #isItemDataDirty: boolean;
     #dataService: IAppItemDataService;
     #shareService: IAppShareService;
+    #attachmentService: IAppAttachmentService;
 
-    constructor(id: string, shareService: IAppShareService, dataService: IAppItemDataService) {
+    constructor(id: string, shareService: IAppShareService, dataService: IAppItemDataService, attachmentService: IAppAttachmentService) {
         this.id = id;
         this.#dataService = dataService;
         this.#shareService = shareService;
+        this.#attachmentService = attachmentService;
     }
 
     get itemData() {
@@ -38,5 +46,13 @@ export class Item implements IShareable, IItemDataRetrievable {
     async unshare(connectionId: string) {
         await this.#shareService.unshareItem(this, connectionId);
         this.#isItemDataDirty = true;
+    }
+
+    async uploadAttachment(label: string, files: FileList) {
+        await this.#attachmentService.upload(this, label, files);
+    }
+
+    async downloadAttachment(attachmentId: string) {
+        
     }
 }

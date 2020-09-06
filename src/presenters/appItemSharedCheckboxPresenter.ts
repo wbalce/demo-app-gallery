@@ -1,12 +1,8 @@
 import { Events } from '../constants/events';
 import { EVENT_BUS } from '../services/eventBus';
-import { Item } from '../models/item';
+import { isItem, Item } from '../models/item';
 import { IView } from '../components/interfaces/view';
 import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
-
-const isItem = (it: IItemDataRetrievable): it is Item => {
-    return ((<Item>it).share) !== undefined;
-}
 
 export type AppItemSharedCheckboxData = {
     connectionId: string,
