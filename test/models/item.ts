@@ -4,6 +4,8 @@ import { Item } from '../../src/models/item';
 import { expect } from 'chai';
 import { rejects } from 'assert';
 import { IAppAttachmentService } from '../../src/services/interfaces/appAttachmentService';
+import { IFileAttachable } from '../../src/models/interfaces/fileAttachable';
+import { IFileAttachment } from '../../src/models/interfaces/fileAttachment';
 
 class MockShareService implements IAppShareService {
     shareItem(item: Item, connectionId: string): Promise<any> {
@@ -36,7 +38,7 @@ class MockDataService implements IAppItemDataService {
 }
 
 class MockAttachmentService implements IAppAttachmentService {
-    getAttachmentIds: (item: Item) => Promise<string[]>;
+    getAttachments: (fileAttachable: IFileAttachable) => Promise<IFileAttachment[]>;
     delete: (item: Item, id: string) => Promise<any>;
     upload: (item: Item, label: string, files: FileList) => Promise<any>;
     download: (id: string) => Promise<any>;

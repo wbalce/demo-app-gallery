@@ -1,33 +1,18 @@
-import { isItem } from '../models/item';
 import { IView } from '../components/interfaces/view';
-import { FileAttachment } from '../models/fileAttachment';
+import { IFileAttachment } from '../models/interfaces/fileAttachment';
+import { IFileAttachable } from '../models/interfaces/fileAttachable';
 
 export class AppAttachmentsListPresenter {
-    #view: IView<FileAttachment>;
+    #view: IView<IFileAttachment>;
 
-    constructor(view: IView<FileAttachment>) {
+    constructor(view: IView<IFileAttachment>) {
         this.#view = view;
     }
 
     async iconClickedHandler(event: CustomEvent) {
-        const result: FileAttachment[] = [];
-        const payload = event.detail;
-        
-        if (isItem(payload)) {
-            const itemData = await payload.itemData;
+        const item = event.detail as IFileAttachable;
+        const results = await item.getAttachments(); 
 
-            itemData.attachments.forEach(attachment => {
-                const slot = itemData.slots.find(x => x.attachment_ids.includes(attachment.id));
-
-                result.push(new FileAttachment(
-                    attachment.id,
-                    slot.label,
-                    attachment.filename,
-                    payload 
-                ));
-            });
-        }
-
-        this.#view.render(result);
+        this.#view.render(results);
     }
 }

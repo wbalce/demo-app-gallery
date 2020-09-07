@@ -1,11 +1,11 @@
 import { IView } from '../components/interfaces/view';
-import { FileAttachment } from '../models/fileAttachment';
+import { IFileAttachment } from '../models/interfaces/fileAttachment';
 
 export class AppAttachmentItemPresenter {
-    #view: IView<FileAttachment>;
-    #fileAttachment: FileAttachment;
+    #view: IView<IFileAttachment>;
+    #fileAttachment: IFileAttachment;
 
-    constructor(view: IView<FileAttachment>, fileAttachment: FileAttachment) {
+    constructor(view: IView<IFileAttachment>, fileAttachment: IFileAttachment) {
         this.#view = view;
         this.#fileAttachment = fileAttachment;
     }

@@ -1,10 +1,10 @@
 import { AppAttachmentItemPresenter } from '../presenters/appAttachmentItemPresenter';
-import { FileAttachment } from '../models/fileAttachment';
+import { IFileAttachment } from '../models/interfaces/fileAttachment';
 import { IView } from './interfaces/view';
 
-export class AppAttachmentItem extends HTMLElement implements IView<FileAttachment> {
+export class AppAttachmentItem extends HTMLElement implements IView<IFileAttachment> {
     #presenter: AppAttachmentItemPresenter;
-    #fileAttachment: FileAttachment;
+    #fileAttachment: IFileAttachment;
 
     connectedCallback() {
         this.render([this.#fileAttachment]);
@@ -13,11 +13,11 @@ export class AppAttachmentItem extends HTMLElement implements IView<FileAttachme
         this.querySelector('.delete')?.addEventListener('click', this.#presenter.onDeleteClickedHandler.bind(this.#presenter));
     }
 
-    set fileAttachment(value: FileAttachment) {
+    set fileAttachment(value: IFileAttachment) {
         this.#fileAttachment = value;
     }
 
-    render(data: FileAttachment[]) {
+    render(data: IFileAttachment[]) {
         const fileAttachment = data[0];
 
         if (fileAttachment) {

@@ -4,6 +4,7 @@ import { IItemDataRetrievable } from './interfaces/itemDataRetrievable';
 import { IAppItemDataService } from '../services/interfaces/appItemDataService';
 import { IAppShareService } from '../services/interfaces/appShareService';
 import { IAppAttachmentService } from '../services/interfaces/appAttachmentService';
+import { IFileAttachment } from './interfaces/fileAttachment';
 
 export const isItem = (it: IItemDataRetrievable): it is Item => {
     return ((<Item>it).share) !== undefined;
@@ -16,7 +17,7 @@ export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
     #dataService: IAppItemDataService;
     #shareService: IAppShareService;
     #attachmentService: IAppAttachmentService;
-    #attachmentIds: string[];
+    #fileAttachments: IFileAttachment[];
 
     constructor(id: string, shareService: IAppShareService, dataService: IAppItemDataService, attachmentService: IAppAttachmentService) {
         this.id = id;
@@ -28,6 +29,12 @@ export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
     get itemData() {
         return (async () => {
             return await this.retrieveItemData();
+        })();
+    }
+
+    get fileAttachments() {
+        return (async () => {
+            return await this.getAttachments();
         })();
     }
 
@@ -49,17 +56,11 @@ export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
         this.#isItemDataDirty = true;
     }
 
-    async getAttachmentIds() {
-        return (async () => {
-            return await this.retrieveAttachmentIds();
-        })();
-    }
-
-    private async retrieveAttachmentIds() {
-        if (this.#isItemDataDirty || !this.#attachmentIds) {
-            this.#attachmentIds = await this.#attachmentService.getAttachmentIds(this);
+    async getAttachments() {
+        if (this.#isItemDataDirty || !this.#fileAttachments) {
+            this.#fileAttachments = await this.#attachmentService.getAttachments(this);
         }
-        return this.#attachmentIds;
+        return this.#fileAttachments;
     }
 
     async uploadAttachment(label: string, files: FileList) {

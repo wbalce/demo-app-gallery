@@ -5,6 +5,7 @@ import { ENVIRONMENT_CONFIG } from './environmentService';
 import { IAppAttachmentService } from './interfaces/appAttachmentService';
 import { IFileAttachable } from '../models/interfaces/fileAttachable';
 import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
+import { FileAttachment } from '../models/fileAttachment';
 
 type fileAttachmentData = {
     itemId: string,
@@ -43,9 +44,22 @@ const buildFileAttachmentConfigs = async (itemId: string, label: string, files: 
 }
 
 export class AppAttachmentService extends AppBaseMeecoService implements IAppAttachmentService {
-    async getAttachmentIds(item: IFileAttachable & IItemDataRetrievable) {
+    async getAttachments(item: IFileAttachable & IItemDataRetrievable) {
+        const result: FileAttachment[] = [];
         const itemData = await item.retrieveItemData();
-        return itemData.attachments.map(x => x.id);
+
+        itemData.attachments.forEach(attachment => {
+            const slot = itemData.slots.find(x => x.attachment_ids.includes(attachment.id));
+
+            result.push(new FileAttachment(
+                attachment.id,
+                slot.label,
+                attachment.filename,
+                item
+            ));
+        });
+
+        return result;
     }
 
     async upload(item: IFileAttachable, label: string, files: FileList): Promise<ItemResponse[]>{
