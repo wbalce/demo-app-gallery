@@ -46,6 +46,10 @@ export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
         return this.#itemData;
     }
 
+    async isAlreadyShared(connectionId: string) {
+        return await this.#shareService.isItemAlreadyShared(this, connectionId);
+    }
+
     async share(connectionId: string) {
         await this.#shareService.shareItem(this, connectionId);
         this.#isItemDataDirty = true;

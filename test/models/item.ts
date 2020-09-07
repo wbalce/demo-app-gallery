@@ -6,8 +6,10 @@ import { rejects } from 'assert';
 import { IAppAttachmentService } from '../../src/services/interfaces/appAttachmentService';
 import { IFileAttachable } from '../../src/models/interfaces/fileAttachable';
 import { IFileAttachment } from '../../src/models/interfaces/fileAttachment';
+import { IShareable } from '../../src/models/interfaces/shareable';
 
 class MockShareService implements IAppShareService {
+    isItemAlreadyShared: (shareable: IShareable, connectionId: string) => Promise<boolean>;
     shareItem(item: Item, connectionId: string): Promise<any> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {

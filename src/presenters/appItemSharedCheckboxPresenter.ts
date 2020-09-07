@@ -41,9 +41,7 @@ export class AppItemSharedCheckboxPresenter {
 
         if (isItem(itemDataRetrievable)) {
             this.#itemChosen = itemDataRetrievable;
-            const itemDetails = await this.#itemChosen.itemData;
-
-            this.#data.isItemChosenShared = !!itemDetails.shares.find(x => x.connection_id === this.#data.connectionId);
+            this.#data.isItemChosenShared = await this.#itemChosen.isAlreadyShared(this.#data.connectionId);
 
             this.#view.render([this.#data]);
         } else {

@@ -6,6 +6,11 @@ import { IAppShareService } from './interfaces/appShareService';
 import { AppBaseMeecoService } from './appBaseMeecoService';
 
 export class AppShareService extends AppBaseMeecoService implements IAppShareService {
+    async isItemAlreadyShared(shareable: IShareable & IItemDataRetrievable, connectionId: string) {
+        const itemData = await shareable.retrieveItemData();
+        return !!itemData.shares.find(x => x.connection_id === connectionId);
+    }
+
     async shareItem(shareable: IShareable, connectionId: string) {
         return await new ShareService(ENVIRONMENT_CONFIG).shareItem(this.user, connectionId, shareable.id);
     }
