@@ -16,6 +16,7 @@ export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
     #dataService: IAppItemDataService;
     #shareService: IAppShareService;
     #attachmentService: IAppAttachmentService;
+    #attachmentIds: string[];
 
     constructor(id: string, shareService: IAppShareService, dataService: IAppItemDataService, attachmentService: IAppAttachmentService) {
         this.id = id;
@@ -48,11 +49,31 @@ export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
         this.#isItemDataDirty = true;
     }
 
+    async getAttachmentIds() {
+        return (async () => {
+            return await this.retrieveAttachmentIds();
+        })();
+    }
+
+    private async retrieveAttachmentIds() {
+        if (this.#isItemDataDirty || !this.#attachmentIds) {
+            this.#attachmentIds = await this.#attachmentService.getAttachmentIds(this);
+        }
+        return this.#attachmentIds;
+    }
+
     async uploadAttachment(label: string, files: FileList) {
         await this.#attachmentService.upload(this, label, files);
+        this.#isItemDataDirty = true;
     }
 
     async downloadAttachment(attachmentId: string) {
-        
+        const result = await this.#attachmentService.download(attachmentId); 
+        debugger;
+    }
+
+    async deleteAttachment(attachmentId: string) {
+        await this.#attachmentService.delete(this, attachmentId);
+        this.#isItemDataDirty = true;
     }
 }

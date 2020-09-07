@@ -3,6 +3,7 @@ import { IAppShareService } from '../../src/services/interfaces/appShareService'
 import { Item } from '../../src/models/item';
 import { expect } from 'chai';
 import { rejects } from 'assert';
+import { IAppAttachmentService } from '../../src/services/interfaces/appAttachmentService';
 
 class MockShareService implements IAppShareService {
     shareItem(item: Item, connectionId: string): Promise<any> {
@@ -34,14 +35,16 @@ class MockDataService implements IAppItemDataService {
     }
 }
 
+class MockAttachmentService implements IAppAttachmentService {
+    getAttachmentIds: (item: Item) => Promise<string[]>;
+    delete: (item: Item, id: string) => Promise<any>;
+    upload: (item: Item, label: string, files: FileList) => Promise<any>;
+    download: (id: string) => Promise<any>;
+}
+
 describe('item', () => {
-    it('should share to connected user', async () => {
-       
-
-    });
-
     it('should cache item data', async () => {
-        const item = new Item('0', new MockShareService(), new MockDataService());
+        const item = new Item('0', new MockShareService(), new MockDataService(), new MockAttachmentService());
 
         const itemData1: number = await item.itemData;
         const itemData2: number = await item.itemData;
@@ -50,7 +53,7 @@ describe('item', () => {
     });
 
     it('should retrieve new item data if shared', async () => {
-        const item = new Item('0', new MockShareService(), new MockDataService());
+        const item = new Item('0', new MockShareService(), new MockDataService(), new MockAttachmentService());
 
         const itemData1: number = await item.itemData;
         await item.share('0');
@@ -60,7 +63,7 @@ describe('item', () => {
     });
 
     it('should retrieve new item data if unshared', async () => {
-        const item = new Item('0', new MockShareService(), new MockDataService());
+        const item = new Item('0', new MockShareService(), new MockDataService(), new MockAttachmentService());
 
         const itemData1: number = await item.itemData;
         await item.unshare('0');

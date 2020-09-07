@@ -18,7 +18,7 @@ export class AppAttachmentUploadPresenter {
             this.#view.render([true]);
         } else {
             this.#itemChosen = null;
-            this.#view.render([false]);
+            this.#view.render([]);
         }
     }
 
