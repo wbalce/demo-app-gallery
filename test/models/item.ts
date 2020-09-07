@@ -43,7 +43,7 @@ class MockAttachmentService implements IAppAttachmentService {
     getAttachments: (fileAttachable: IFileAttachable) => Promise<IFileAttachment[]>;
     delete: (item: Item, id: string) => Promise<any>;
     upload: (item: Item, label: string, files: FileList) => Promise<any>;
-    download: (id: string) => Promise<any>;
+    download: (attachment: IFileAttachment) => Promise<any>;
 }
 
 describe('item', () => {

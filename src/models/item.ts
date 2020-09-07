@@ -72,9 +72,8 @@ export class Item implements IShareable, IItemDataRetrievable, IFileAttachable {
         this.#isItemDataDirty = true;
     }
 
-    async downloadAttachment(attachmentId: string) {
-        const result = await this.#attachmentService.download(attachmentId); 
-        debugger;
+    async downloadAttachment(attachment: IFileAttachment) {
+        await this.#attachmentService.download(attachment); 
     }
 
     async deleteAttachment(attachmentId: string) {

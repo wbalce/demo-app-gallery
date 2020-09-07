@@ -6,6 +6,7 @@ import { IAppAttachmentService } from './interfaces/appAttachmentService';
 import { IFileAttachable } from '../models/interfaces/fileAttachable';
 import { IItemDataRetrievable } from '../models/interfaces/itemDataRetrievable';
 import { FileAttachment } from '../models/fileAttachment';
+import { IFileAttachment } from '../models/interfaces/fileAttachment';
 
 type fileAttachmentData = {
     itemId: string,
@@ -54,6 +55,7 @@ export class AppAttachmentService extends AppBaseMeecoService implements IAppAtt
             result.push(new FileAttachment(
                 attachment.id,
                 slot.label,
+                attachment.content_type,
                 attachment.filename,
                 item
             ));
@@ -75,22 +77,21 @@ export class AppAttachmentService extends AppBaseMeecoService implements IAppAtt
         return result;
     }
 
-    async download(attachmentId: string) {
-        return await new ItemService(ENVIRONMENT_CONFIG).downloadAttachment(attachmentId, this.user.vault_access_token, this.user.data_encryption_key);
-        // downloadFile(data: any): void {
-        //     const blob: Blob = new Blob([data], {type: 'text/csv'});
-        //     const fileName: string = 'my-test.csv';
-        //     const objectUrl: string = URL.createObjectURL(blob);
-        //     const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-        
-        //     a.href = objectUrl;
-        //     a.download = fileName;
-        //     document.body.appendChild(a);
-        //     a.click();        
-        
-        //     document.body.removeChild(a);
-        //     URL.revokeObjectURL(objectUrl);
-        // }
+    async download(attachment: IFileAttachment) {
+        const result = await new ItemService(ENVIRONMENT_CONFIG).downloadAttachment(attachment.id, this.user.vault_access_token, this.user.data_encryption_key);
+        const blob: Blob = new Blob([result], {type: attachment.fileType});
+        const fileName: string = attachment.fileName;
+        const objectUrl: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+    
+        a.href = objectUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();        
+    
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+
     }
 
     async delete(item: IFileAttachable & IItemDataRetrievable, attachmentId: string) {
