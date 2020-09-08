@@ -17,7 +17,7 @@ export class AppIcon extends HTMLElement {
     }
 
     async clickHandler() {
-        EVENT_BUS.fire<IItemDataRetrievable>(Events.ICON_CLICKED, this.#itemDataRetreivable);
+        EVENT_BUS.fire(Events.ICON_CLICKED, this.#itemDataRetreivable);
     }
 
     enableAppItem() {
