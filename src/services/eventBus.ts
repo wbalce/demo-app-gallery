@@ -13,7 +13,7 @@ class EventBus {
         this.#privateBus.removeEventListener(event, callback);
     }
 
-    fire(event, detail) {
+    fire(event, detail?) {
         this.#privateBus.dispatchEvent(new CustomEvent(event, { detail }));
     }
 }
